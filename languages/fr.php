@@ -24,6 +24,7 @@
 		'inria:settings:help:nbWire' => "entier de 1 à 10",
 		'inria:settings:label:nbRiver' => "Nombre d'actualités",
 		'inria:settings:help:nbRiver' => "entier de 1 à 10",
+		'custom_index_inria:groups:wall' => "Mur des groupes populaires"
 	);
 					
 	add_translation("fr",$french);

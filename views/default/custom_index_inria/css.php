@@ -76,6 +76,9 @@
 #persistent_login {
 	display:block;
 }
-
+.sidebarBox .groupsWrapper .popularGroup {
+    float: left;
+    margin: 2px;
+}
 
 
