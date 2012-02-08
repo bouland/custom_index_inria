@@ -24,7 +24,11 @@
 		'inria:settings:help:nbWire' => "entier de 1 à 10",
 		'inria:settings:label:nbRiver' => "Nombre d'actualités",
 		'inria:settings:help:nbRiver' => "entier de 1 à 10",
-		'custom_index_inria:groups:wall' => "Mur des groupes populaires"
+		'custom_index_inria:groups:wall' => "Mur des groupes populaires",
+		'' => '',
+		'custom_index_inria:filter:save:success' => 'Vos filtres sont sauvegardés',
+		'custom_index_inria:filter:save:failed' => 'Impossible de sauvegarder vos filtres',
+		'custom_index_inria:filter:form:filtersnotarray' => 'Le formulaire ne renvoit pas de filtres valides',
 	);
 					
 	add_translation("fr",$french);
