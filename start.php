@@ -7,8 +7,9 @@
 	 */
 
     function custom_index_inria_init() {
-	
+
     	require_once dirname(__FILE__) . "/lib/custom_index_inria.php";
+    	require_once dirname(__FILE__) . "/lib/riverfilter.php";
     	
     	register_elgg_event_handler('pagesetup', 'system', 'custom_index_inria_pagesetup');
     	
@@ -20,7 +21,7 @@
        	// Replace the default index page
        	// Replace the custom_index page
 	   	register_plugin_hook('index','system','custom_index_inria_index');
-    }
+   }
     
     function custom_index_inria_index() {
 			
