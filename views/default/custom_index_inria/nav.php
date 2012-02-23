@@ -23,7 +23,7 @@ if (!empty($vars['config']->registered_entities)) {
 	}
 }
 
-$filters = river_get_item_types();
+$filters = get_rivertypes();
 
 
 

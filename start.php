@@ -9,7 +9,8 @@
     function custom_index_inria_init() {
 
     	require_once dirname(__FILE__) . "/lib/custom_index_inria.php";
-    	require_once dirname(__FILE__) . "/lib/riverfilter.php";
+    	require_once dirname(__FILE__) . "/lib/river_filter.php";
+    	require_once dirname(__FILE__) . "/lib/river_type.php";
     	
     	register_elgg_event_handler('pagesetup', 'system', 'custom_index_inria_pagesetup');
     	
