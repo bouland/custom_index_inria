@@ -80,5 +80,11 @@
     float: left;
     margin: 2px;
 }
-
+.filter_form_wrapper{
+	padding:20px;
+}
+.filter_form_wrapper form{
+	padding:20px;
+	border: 1px solid #CCCCCC;
+}
 

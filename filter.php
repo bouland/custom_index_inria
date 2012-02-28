@@ -1,27 +1,23 @@
-<?php
+<?php // Get the Elgg framework
+require_once( $_SERVER['DOCUMENT_ROOT'] . "/engine/start.php");
 
-/**
- * Elgg custom_index_inria plugin filter
- *
- * @package INRIA
- */
-
-// Load Elgg framework
-require_once(dirname(dirname(dirname(__FILE__))) . '/engine/start.php');
-
-// Ensure only logged-in users can see this page
+// Make sure only valid admin users can see this
 gatekeeper();
 
-set_page_owner(get_loggedin_userid());
+// Make sure we don't open a security hole ...
+if ((!page_owner_entity()) || (!page_owner_entity()->canEdit())) {
+	set_page_owner(get_loggedin_userid());
+}
+$user = page_owner_entity();
+$filters = get_user_filters($user);
 
-// Set the context to settings
-set_context('settings');
+$content = elgg_view_title(elgg_echo('custom_index_inria:settings:filter'));
+foreach($filters as $filter)
+{
+	$content .= elgg_view("forms/filter/edit", array('filters' => $filter));
+}
+$content .= elgg_view("forms/filter/edit");
 
+$body = elgg_view_layout("two_column_left_sidebar", '', $content);
 
-$body = elgg_view('custom_index_inria/forms/filter');
-
-// Insert it into the correct canvas layout
-$body = elgg_view_layout('two_column_left_sidebar', '', $body);
-
-
-page_draw(elgg_echo('notifications:subscriptions:changesettings'), $body);
+page_draw(elgg_echo("usersettings:user"), $body);

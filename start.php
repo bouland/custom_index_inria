@@ -8,6 +8,8 @@
 
     function custom_index_inria_init() {
 
+    	global $CONFIG;
+    	
     	require_once dirname(__FILE__) . "/lib/custom_index_inria.php";
     	require_once dirname(__FILE__) . "/lib/river_filter.php";
     	require_once dirname(__FILE__) . "/lib/river_type.php";
@@ -16,9 +18,12 @@
     	
     	register_page_handler('settings','custom_index_inria_page_handler');
     	
+    	register_action('filter/save', FALSE, $CONFIG->pluginspath . "custom_index_inria/actions/save.php");
+    	
+    	run_function_once("river_filter_run_once");
         // Extend system CSS with our own styles
 		elgg_extend_view('css','custom_index_inria/css');
-				
+		elgg_extend_view('metatags','custom_index_inria/metatags');
        	// Replace the default index page
        	// Replace the custom_index page
 	   	register_plugin_hook('index','system','custom_index_inria_index');

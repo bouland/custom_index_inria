@@ -29,7 +29,24 @@
 		'custom_index_inria:filter:save:success' => 'Vos filtres sont sauvegardés',
 		'custom_index_inria:filter:save:failed' => 'Impossible de sauvegarder vos filtres',
 		'custom_index_inria:filter:form:filtersnotarray' => 'Le formulaire ne renvoit pas de filtres valides',
-	);
+		'custom_index_inria:settings:filter' => "Vos filtres d'actualités",
+		'custom_index_inria:forms:filter:edit:save' => 'Enregistrer',
+		'custom_index_inria:forms:filter:edit:first' => 'Utiliser ce filtre par défaut ',
+		'custom_index_inria:forms:filter:edit:label' => 'Le nom du filtre',
+		'custom_index_inria:forms:filter:edit:title' => 'Votre filtre %s',
+		'custom_index_inria:forms:filter:edit:title:new' => 'Créer un nouveau filtre',
+		'custom_index_inria:forms:filter:edit:select' => "Quels types d'actualités pour ce filtre",
+		'custom_index_inria:forms:filter:edit:all' => 'Tous',
+		'custom_index_inria:forms:filter:edit:river:action:create' => 'création',
+		'custom_index_inria:forms:filter:edit:river:action:join' => 'nouveau membre',
+		'custom_index_inria:forms:filter:edit:river:action:update' => 'mise à jour',
+		'custom_index_inria:forms:filter:edit:river:action:comment' => 'commentaire',
+		'custom_index_inria:forms:filter:edit:river:action:attend' => 'participation',
+		'custom_index_inria:forms:filter:edit:river:action:register' => 'inscription',
+		'custom_index_inria:forms:filter:edit:river:action:attend' => 'démarrage',
+		'custom_index_inria:forms:filter:edit:river:action:friend' => 'ajoute un contact',
+		''
+ 	);
 					
 	add_translation("fr",$french);
 
