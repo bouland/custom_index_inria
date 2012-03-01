@@ -7,7 +7,13 @@
 	**/
 
 	$french = array (
-		
+		'edit:title' => 'Editer',
+		'edit:alt' => 'Editer',
+		'add:title' => 'Ajouter',
+		'add:alt' => 'Ajouter',
+		'cancel:title' => 'Annuler',
+		'cancel:alt' => 'Annuler',
+		'delete:title' => 'Supprimer',
 		'inria:title' => "Accueil",
 		'inria:bookmarks' => "Signets les plus récents",
 		'inria:groups_featured' => "Les groupes à la une",
@@ -23,13 +29,22 @@
 		'inria:settings:label:nbWire' => "Nombre de fils",
 		'inria:settings:help:nbWire' => "entier de 1 à 10",
 		'inria:settings:label:nbRiver' => "Nombre d'actualités",
+		'inria:settings:filter:default:link' => 'Modifier les filtres par défaut',
 		'inria:settings:help:nbRiver' => "entier de 1 à 10",
 		'custom_index_inria:groups:wall' => "Mur des groupes populaires",
-		'' => '',
-		'custom_index_inria:filter:save:success' => 'Vos filtres sont sauvegardés',
-		'custom_index_inria:filter:save:failed' => 'Impossible de sauvegarder vos filtres',
-		'custom_index_inria:filter:form:filtersnotarray' => 'Le formulaire ne renvoit pas de filtres valides',
 		'custom_index_inria:settings:filter' => "Vos filtres d'actualités",
+		'custom_index_inria:filter:label:new' => 'Nouveau filtre',
+		'custom_index_inria:actions:save:create:success' => 'Votre filtre est sauvegardé',
+		'custom_index_inria:actions:save:create:failed' => 'Impossible de sauvegarder votre filtre',
+		'custom_index_inria:actions:save:invalid:label' => 'Ce nom est invalide',
+		'custom_index_inria:actions:save:invalid:ids' => "Erreur de type d'activités",
+		'custom_index_inria:actions:save:guid:notfound' => 'Guid du filtre inconnu',
+		'custom_index_inria:actions:save:invalid:guid' => 'Guid invalid (not int)',
+		'custom_index_inria:actions:save:update:success' => 'Mise à jour du filtre réussi',
+		'custom_index_inria:actions:save:update:failed' => 'Mise à jour du filtre échoué',
+		'custom_index_inria:actions:action:save:filtersnotvalid' => 'parametre de filtre invalids',
+		'custom_index_inria:actions:deleted:success' => 'Votre filtre est supprimé',
+		'custom_index_inria:actions:deleted:fail' => "Votre filtre n'a pas pu être supprimé",
 		'custom_index_inria:forms:filter:edit:save' => 'Enregistrer',
 		'custom_index_inria:forms:filter:edit:first' => 'Utiliser ce filtre par défaut ',
 		'custom_index_inria:forms:filter:edit:label' => 'Le nom du filtre',
@@ -45,7 +60,10 @@
 		'custom_index_inria:forms:filter:edit:river:action:register' => 'inscription',
 		'custom_index_inria:forms:filter:edit:river:action:attend' => 'démarrage',
 		'custom_index_inria:forms:filter:edit:river:action:friend' => 'ajoute un contact',
-		''
+		'custom_index_inria:forms:filter:edit:add' => 'Ajouter un filtre',
+		'custom_index_inria:forms:filter:edit:delete' => 'Supprimer ce filtre',
+		'custom_index_inria:forms:filter:edit' => 'Editer ce filtre',
+		
  	);
 					
 	add_translation("fr",$french);

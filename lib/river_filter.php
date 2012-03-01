@@ -5,7 +5,7 @@ class ElggFilter extends ElggObject {
 	protected function initialise_attributes() {
 		parent::initialise_attributes();
 		$this->attributes['subtype'] = "filter";
-		$this->attributes['title'] = elgg_echo('custom_index_inria:filter:label:default');
+		$this->attributes['title'] = elgg_echo('custom_index_inria:filter:label:new');
 	}
 	public function __construct($guid = null) {
 		parent::__construct($guid);
@@ -50,16 +50,19 @@ class ElggFilter extends ElggObject {
 				{
 					return FALSE;	
 				}
-				$value = impode(',', $value);
+				$value = implode(',', $value);
 			}elseif ($name == 'first' && $value == TRUE)
 			{
 				$owner = get_user($this->owner_guid);
 				$owner_filters = get_user_filters($owner);
-				foreach( $owner_filters as $filter)
+				if(is_array($owner_filters))
 				{
-					if($filter->guid != $this->guid){
-						$filter->first = FALSE;
-						$filter->save();
+					foreach( $owner_filters as $filter)
+					{
+						if($filter->guid != $this->guid){
+							$filter->first = FALSE;
+							$filter->save();
+						}
 					}
 				}
 			}
@@ -67,53 +70,29 @@ class ElggFilter extends ElggObject {
 		}
 		return true;
 	}
-	public function update(ElggUser $user, array $filter_river_type_ids, $label, $first = FALSE)
+	public function update(int $user_guid, array $filter_river_type_ids, $label, $first = FALSE)
 	{
-		if( ! $user instanceof ElggUser )
-		{
-			return false;
+		if( ! get_entity($user_guid) instanceof ElggUser){
+			$user_guid = 0;
 		}
-		if( ! is_valid_river_type_id($filter_river_type_ids) )
+		
+		if( ! is_valid_river_type_ids($filter_river_type_ids) )
 		{
 			return false;
 		}
 		if( ! empty($label) && $label != "")
 		{
-			$filter->title = $label ;
+			$this->title = $label ;
 		}
-		if( $first )
+		if( $first != $this->first)
 		{
-			$filter->first = TRUE;
+			$this->first = $first;
 		}
 		$this->river_types = $filter_river_type_ids;
-		$this->owner_guid = $user->guid;
+		$this->owner_guid = $user_guid;
 		$this->access_id = ACCESS_PRIVATE;
-		$this->save();
-		return $this;
+		return $this->save();
 	}
-}
-/**
-* Return a filter with $river_type_ids
-* 
-* @param ElggUser $user
-* @param array $filter_river_type_ids
-* @param string $label Optional
-* @param int $order Optional
-*
-* @return ElggClass or FALSE
-*/
-function create_filter(ElggUser $user, array $filter_river_type_ids, $label, $first)
-{
-	if( ! $user instanceof ElggUser )
-	{
-		return false;
-	}
-	$filter = exist_filter($user, $filter_river_type_ids);
-	if ( ! $filter )
-	{
-		$filter= new ElggFilter();
-	}
-	return $filter->update($user, $filter_river_type_ids, $label, $first);
 }
 /**
 * Return true if
@@ -129,7 +108,7 @@ function is_valid_river_type_ids(array $river_type_ids)
 {
 	foreach ($river_type_ids as $river_type_id)
 	{
-		if( ! is_int($river_type_id) ){
+		if( ! is_int((int)$river_type_id) ){
 			return FALSE;
 		}
 		if( ! get_rivertype_from_id($river_type_id) )
@@ -139,30 +118,7 @@ function is_valid_river_type_ids(array $river_type_ids)
 	}
 	return TRUE;
 }
-/**
-* Return the filter for given array of river_type ids, or false.
-*
-* @param string $filter_river_type_ids
-* 
-* @return ElggClass or FALSE
-*/
-function exist_filter(ElggUser $user, array $filter_river_type_ids)
-{
-	if( !is_valid_river_type_ids($filter_river_type_ids) )
-	{
-		return false;
-	}
-	
-	$filters = get_user_filters($user);
-	foreach ($filters as $filter)
-	{
-		if($filter->river_types == $filter_river_type_ids)
-		{
-			return $filter;
-		}
-	}
-	return FALSE;
-}
+
 /**
 * Return the filter for given array of river_type ids, or false.
 *
@@ -180,8 +136,45 @@ function get_user_filters(ElggUser $user)
 										'subtype' => 'filter',
 										'owner_guid' => $user->guid,
 										'limit' => 999));
-	sort($filters);
-	return $filters;
+	if(is_array($filters))
+	{
+		usort($filters,'cmp_filters');
+		return $filters;
+	}else{
+		return FALSE;
+	}
+}
+function get_default_filters()
+{
+	global $CONFIG;
+	$sql = "SELECT DISTINCT e.* FROM {$CONFIG->dbprefix}entities e  WHERE  e.type = 'object' AND e.subtype = 43 AND e.owner_guid = 0 ORDER BY e.time_created desc LIMIT 0, 999";
+	
+	$filters = get_data($sql, 'entity_row_to_elggstar');
+	if(is_array($filters))
+	{
+		usort($filters,'cmp_filters');
+		return $filters;
+	}else{
+		return FALSE;
+	}
+}
+function cmp_filters(ElggFilter $f1, ElggFilter $f2)
+{
+	if( $f1->first && ! $f2->first){
+		return -1;
+	}
+	if( ! $f1->first && $f2->first){
+		return 1;
+	}
+	if( $f1->first == $f2->first){
+		if($f1->owner_guid < $f2->owner_guid){
+			return -1;
+		}
+		if($f1->owner_guid > $f2->owner_guid){
+			return 1;
+		}
+		return 0;
+	}
 }
 /**
 * Run some things once.
@@ -190,4 +183,90 @@ function get_user_filters(ElggUser $user)
 function river_filter_run_once() {
 	// Register a class
 	add_subtype("object", "filter", "ElggFilter");
+}
+function get_river_items_filtered(array $options){
+	$defaults = array(
+						'filter' 				=> 	get_entity(get_plugin_setting('default_filter', 'custom_index_inria')),
+						'limit'					=>	10,
+						'offset'				=>	0,
+						'object_guid' 			=> 	0,
+						'subject_guid'			=> 	0,
+						'subject_relationship' 	=> 	''
+	);
+	
+	$options = array_merge($defaults, $options);
+	
+	
+	$limit = (int)$options['limit'];
+	$offset = (int)$options['offset'];
+	$object_guid = (int)$options['object_guid'];
+	$subject_guid = (int)$options['subject_guid'];
+	$subject_relationship = $options['subject_relationship'];
+	$filter = $options['filter'];
+	
+	global $CONFIG;
+	
+	$where = array();
+	$where[] = 'r.river_type = t.id';
+	
+	if( $filter instanceof ElggFilter)
+	{
+		$and = array();
+		$or = array();
+		foreach ($filter->river_types as $rivertype_id){
+			$river_type = get_rivertype_from_id($rivertype_id);
+			$and = array();
+			$and[] = " type = '{$river_type->type}' ";
+			if($river_type->subtype){
+				$and[] = " subtype = '{$river_type->subtype}' ";
+			}
+			$and[] = " action = '{$river_type->action}' ";
+			$or[] = '( '. implode(' AND ', $and) . ' )';
+		}
+		$where[] = '( '. implode(' OR ', $or) . ' )';
+	}
+	
+	if (empty($subject_relationship)) {
+		if (!empty($subject_guid)) {
+			if (!is_array($subject_guid)) {
+				$where[] = " subject_guid = {$subject_guid} ";
+			} else {
+				$where[] = " subject_guid in (" . implode(',',$subject_guid) . ") ";
+			}
+		}
+	} else {
+		if (!is_array($subject_guid)) {
+			if ($entities = elgg_get_entities_from_relationship(array(
+					'relationship' => $subject_relationship,
+					'relationship_guid' => $subject_guid,
+					'limit' => 9999))
+			) {
+				$guids = array();
+				foreach($entities as $entity) {
+					$guids[] = (int) $entity->guid;
+				}
+				// $guids[] = $subject_guid;
+				$where[] = " subject_guid in (" . implode(',',$guids) . ") ";
+			} else {
+				return array();
+			}
+		}else{
+			return array();
+		}
+	}
+	if (!empty($object_guid))
+	{
+		if (!is_array($object_guid)) {
+			$where[] = " object_guid = {$object_guid} ";
+		} else {
+			$where[] = " object_guid in (" . implode(',',$object_guid) . ") ";
+		}
+	}
+	$whereclause = implode(' AND ', $where);
+	// Construct main SQL
+	$sql = "SELECT r.id,type,subtype,action,access_id,view,subject_guid,object_guid,annotation_id,posted" .
+		 		" FROM {$CONFIG->dbprefix}river r, {$CONFIG->dbprefix}river_types t WHERE {$whereclause} ORDER BY posted DESC LIMIT {$offset},{$limit}";
+	
+	// Get data
+	return get_data($sql);
 }

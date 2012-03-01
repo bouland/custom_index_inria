@@ -224,6 +224,7 @@ function get_river_items($subject_guid = 0, $object_guid = 0, $subject_relations
 	// Construct 'where' clauses for the river
 	$where = array();
 	
+	//join with river_types table
 	$where[] = 'r.river_type = t.id';
 	// river table does not have columns expected by get_access_sql_suffix so we modify its output
 	$where[] = str_replace("and enabled='yes'",'',str_replace('owner_guid','subject_guid',get_access_sql_suffix()));
@@ -279,6 +280,7 @@ function get_river_items($subject_guid = 0, $object_guid = 0, $subject_relations
 	$whereclause = implode(' and ', $where);
 
 	// Construct main SQL
+	// add table river_types t
 	$sql = "select id,type,subtype,action_type,access_id,view,subject_guid,object_guid,annotation_id,posted" .
 	 		" from {$CONFIG->dbprefix}river r, {$CONFIG->dbprefix}river_types t where {$whereclause} order by posted desc limit {$offset},{$limit}";
 

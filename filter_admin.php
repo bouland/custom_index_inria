@@ -2,15 +2,11 @@
 require_once( $_SERVER['DOCUMENT_ROOT'] . "/engine/start.php");
 
 // Make sure only valid admin users can see this
-gatekeeper();
+admin_gatekeeper();
 
-// Make sure we don't open a security hole ...
-if ((!page_owner_entity()) || (!page_owner_entity()->canEdit())) {
-	set_page_owner(get_loggedin_userid());
-}
-set_input('owner_guid', page_owner());
+$filters = get_default_filters();
 
-$filters = get_user_filters(page_owner_entity());
+set_input('owner_guid', 0);
 
 $title = elgg_view_title(elgg_echo('custom_index_inria:settings:filter'));
 

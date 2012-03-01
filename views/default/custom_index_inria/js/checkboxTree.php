@@ -5,11 +5,11 @@
 			onCheck: { 
 				ancestors: 'checkIfFull',
 				descendants: 'check',
-				node: 'expand'
+				node: 'collapse'
 			},
 			onUncheck: {
 				ancestors: 'uncheck',
-				node: 'collapse' 
+				node: 'expand' 
 			}
 		});
 	}); </script>

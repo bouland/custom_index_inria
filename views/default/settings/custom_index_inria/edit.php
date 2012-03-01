@@ -14,5 +14,6 @@
         <div class="example"><?php echo elgg_echo('inria:settings:help:nbRiver');?></div>
         <input type="text" name="params[nbRiver]" value="<?php if (empty($plugin->nbRiver)) {echo 3;} else {echo $plugin->nbRiver;}?>"/><br/>
         
+        <a href="<?php echo $CONFIG->url . 'mod/custom_index_inria/filter_admin.php'?>"><?php  echo elgg_echo('inria:settings:filter:default:link'); ?></a>
     </fieldset>
 </p>

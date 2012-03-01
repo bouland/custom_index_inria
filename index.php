@@ -26,48 +26,7 @@
 		
     }
 	
-		
-	$content = strip_tags(get_input('content',''));
-	$content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
-	$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8', false);
-	
-	$content = explode(',' ,$content);
-	$type = $content[0];
-	if (isset($content[1])) {
-		$subtype = $content[1];
-	} else {
-		$subtype = '';
-	}
-	
-	// only allow real and registered types
-	switch($type) {
-		case 'user':
-		case 'object':
-		case 'group':
-		case 'site':
-			break;
-	
-		default:
-			$type = '';
-			break;
-	}
-	
-	// only allow real and registered subtypes
-	$registered_entities = get_registered_entity_types($type);
-	
-	if (!in_array($subtype, $registered_entities)) {
-		$subtype = '';
-	}
-	
-	$orient = get_input('display');
-	$callback = get_input('callback');
-	
-	if ($type == 'all') {
-		$type = '';
-		$subtype = '';
-	}
 	$limit = (Int)get_plugin_setting('nbWire','custom_index_inria');
-	
 	$wire = elgg_view_river_items(  0,
 									0,
 									'',
@@ -78,27 +37,63 @@
 									0,
 									0,
 									false);
-	$nav = elgg_view('custom_index_inria/nav',array(
-													'type' => $type,
-													'subtype' => $subtype,
-													'orient' => $orient
-												));
 	
-	// dig the river
+	$offset = (int) get_input('offset',0);
+	$orient = get_input('orient','all');
+	$callback = get_input('callback');
 	$limit = (Int)get_plugin_setting('nbRiver','custom_index_inria');
-	$river = elgg_view_river_items( $subject_guid,
-									0,
-									$relationship_type,
-									$type,
-									$subtype,
-									'',
-									$limit,
-									0,
-									0,
-									true);
-	// Replacing callback calls in the nav with something meaningless
-	$river = str_replace('callback=true', 'replaced=88,334', $river);
-	$ajax_content = $nav . $river . elgg_view('riverdashboard/js');
+	$filter_guid = strip_tags(get_input('filter_guid',''));
+	$filter_guid = mb_convert_encoding($filter_guid, 'HTML-ENTITIES', 'UTF-8');
+	$filter_guid = htmlspecialchars($filter_guid, ENT_QUOTES, 'UTF-8', false);
+	
+	
+	$filters = get_default_filters();
+	if(is_array($filters)){
+		$user_filters = get_user_filters(get_loggedin_user());
+		if(is_array($user_filters)){
+			$filters = array_merge($filters,$user_filters);
+			usort($filters,'cmp_filters');
+		}
+		if (empty($filter_guid)) {
+			$filter = $filters[0];
+		}else{
+			$filter = get_entity($filter_guid);
+		}
+		if($filter instanceof ElggFilter)
+		{
+			switch($orient) {
+				case 'mine':
+					$subject_guid = get_loggedin_userid();
+					$relationship_type = '';
+					break;
+				case 'friends':
+					$subject_guid = get_loggedin_userid();
+					$relationship_type = 'friend';
+					break;
+				default:
+					$subject_guid = 0;
+					$relationship_type = '';
+					break;
+			}
+	
+			$items = get_river_items_filtered(array(	'filter' 	=> 	$filter,
+														'limit'		=>	$limit,
+														'offset'	=>	$offset,
+														'subject_guid'			=> 	$subject_guid,
+														'subject_relationship' 	=> 	$relationship_type));
+			
+		}
+		$nav = elgg_view('custom_index_inria/nav',array(	'filters' 		=> $filters,
+															'filter_guid' 	=> $filter_guid,
+															'orient' 		=> $orient));
+		$river = elgg_view('river/item/list',array(	'limit' => $limit,
+													'offset' => $offset,
+													'items' => $items,
+													'pagination' => true));
+		// Replacing callback calls in the nav with something meaningless
+		$river = str_replace('callback=true', 'replaced=88,334', $river);
+		$ajax_content = $nav . $river . elgg_view('riverdashboard/js');
+	}
 	if (empty($callback)) {
 		// create our view
 		If ($wire)

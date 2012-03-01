@@ -80,11 +80,19 @@
     float: left;
     margin: 2px;
 }
-.filter_form_wrapper{
-	padding:20px;
+.nav_filter_id,
+.nav_filter_orient,
+.nav_filter_edit {
+	display:inline
 }
-.filter_form_wrapper form{
-	padding:20px;
-	border: 1px solid #CCCCCC;
+.nav_filter_edit {
+	margin-left: 4px;
+	height:25px;
+}
+.nav_filter_edit a{
+	vertical-align: middle;
+}
+.nav_filter_menu{
+	height:25px;
 }
 
