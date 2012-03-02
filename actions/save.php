@@ -11,7 +11,7 @@ $filter_first = get_input('filter_first',FALSE);
 
 $filter_river_type_ids = get_input('filter_river_type_ids');
 
-$user_guid = get_input('user_guid');
+$owner_guid = get_input('owner_guid');
 
 if ( ! empty($filter_label) && ! empty($filter_river_type_ids) )
 {
@@ -32,7 +32,7 @@ if ( ! empty($filter_label) && ! empty($filter_river_type_ids) )
 			$filter = get_entity($filter_guid);
 			if( $filter instanceof ElggFilter )
 			{
-				if ($filter->update($user_guid, $filter_river_type_ids, $filter_label, $filter_first))
+				if ($filter->update($owner_guid, $filter_river_type_ids, $filter_label, $filter_first))
 				{
 					system_message(elgg_echo('custom_index_inria:actions:save:update:success'));
 				}else{
@@ -49,7 +49,7 @@ if ( ! empty($filter_label) && ! empty($filter_river_type_ids) )
 		}
 	}else{
 		$filter = new ElggFilter();
-		if ($filter->save() && $filter->update($user_guid, $filter_river_type_ids, $filter_label, $filter_first))
+		if ($filter->save() && $filter->update($owner_guid, $filter_river_type_ids, $filter_label, $filter_first))
 		{
 			system_message(elgg_echo('custom_index_inria:actions:save:create:success'));
 		}else{

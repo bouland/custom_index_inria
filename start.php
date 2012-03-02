@@ -56,6 +56,9 @@
 			$user = get_loggedin_user();
 			add_submenu_item(elgg_echo('custom_index_inria:settings:filter'), $CONFIG->wwwroot . "pg/settings/filter/{$user->username}/");
 		}
+		if (get_context() == 'admin' && isadminloggedin()) {
+			add_submenu_item(elgg_echo('inria:settings:filter:default:link'), $CONFIG->wwwroot . 'mod/custom_index_inria/filter_admin.php');
+		}
 	}
 	function custom_index_inria_page_handler($page) {
 		global $CONFIG;

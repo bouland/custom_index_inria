@@ -70,10 +70,13 @@ class ElggFilter extends ElggObject {
 		}
 		return true;
 	}
-	public function update(int $user_guid, array $filter_river_type_ids, $label, $first = FALSE)
+	public function update(int $ower_guid, array $filter_river_type_ids, $label, $first = FALSE)
 	{
-		if( ! get_entity($user_guid) instanceof ElggUser){
-			$user_guid = 0;
+		if( ! get_entity($ower_guid) instanceof ElggUser){
+			$ower_guid = 0;
+			$access_id = ACCESS_PUBLIC;
+		}else{
+			$access_id = ACCESS_PRIVATE;
 		}
 		
 		if( ! is_valid_river_type_ids($filter_river_type_ids) )
@@ -89,8 +92,8 @@ class ElggFilter extends ElggObject {
 			$this->first = $first;
 		}
 		$this->river_types = $filter_river_type_ids;
-		$this->owner_guid = $user_guid;
-		$this->access_id = ACCESS_PRIVATE;
+		$this->owner_guid = $ower_guid;
+		$this->access_id = $access_id;
 		return $this->save();
 	}
 }
@@ -166,15 +169,13 @@ function cmp_filters(ElggFilter $f1, ElggFilter $f2)
 	if( ! $f1->first && $f2->first){
 		return 1;
 	}
-	if( $f1->first == $f2->first){
-		if($f1->owner_guid < $f2->owner_guid){
-			return -1;
-		}
-		if($f1->owner_guid > $f2->owner_guid){
-			return 1;
-		}
-		return 0;
+	if($f1->owner_guid < $f2->owner_guid){
+		return 1;
 	}
+	if($f1->owner_guid > $f2->owner_guid){
+		return -1;
+	}
+	return 0;
 }
 /**
 * Run some things once.
