@@ -77,7 +77,7 @@
 			}
 	
 			$items = get_river_items_filtered(array(	'filter' 	=> 	$filter,
-														'limit'		=>	$limit,
+														'limit'		=>	($limit + 1),
 														'offset'	=>	$offset,
 														'subject_guid'			=> 	$subject_guid,
 														'subject_relationship' 	=> 	$relationship_type));
