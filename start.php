@@ -30,6 +30,8 @@
        	// Replace the default index page
        	// Replace the custom_index page
 	   	register_plugin_hook('index','system','custom_index_inria_index');
+	   	register_plugin_hook('creating','river','custom_index_inria_river_stop_flood');
+	   	
    }
     
     function custom_index_inria_index() {
@@ -79,6 +81,23 @@
 		}
 		
 		return TRUE;
+	}
+	function custom_index_inria_river_stop_flood($hook, $entity_type, $params, $returnvalue)
+	{
+		if($hook == 'creating' && $entity_type = 'river')
+		{
+			if(isset($params['river_type']) && isset($params['access_id']) &&	isset($params['subject_guid']) && isset($params['object_guid']) && isset($params['annotation_id']) && isset($params['posted']) )
+			{
+				$noflood = 60*60;
+				$river_type = get_rivertype_from_id($params['river_type']);
+				if(get_river_items($params['subject_guid'],$params['object_guid'],'',$river_type->type,$river_type->subtype,'',999,0,$params['posted']-$noflood,$params['posted']))
+				{
+					return FALSE;
+				}
+				
+			}
+		}
+		return $returnvalue;
 	}
 	
 	register_elgg_event_handler('init','system','custom_index_inria_init');
