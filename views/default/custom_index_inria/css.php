@@ -95,4 +95,19 @@
 .nav_filter_menu{
 	height:25px;
 }
-
+#index_public h1{
+	text-align:center;
+	margin:30px;
+}
+#index_public{
+	margin-top:11px;
+	background: none repeat scroll 0 0 #F5F5F5;
+    min-height: 360px;
+    padding: 10px;
+}
+#index_public h3{
+	margin-bottom:10px;
+}
+#index_public p{
+	margin-bottom:30px;
+}

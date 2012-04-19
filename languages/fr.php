@@ -31,6 +31,8 @@
 		'inria:settings:label:nbRiver' => "Nombre d'actualités",
 		'inria:settings:filter:default:link' => 'Modifier les filtres par défaut',
 		'inria:settings:help:nbRiver' => "entier de 1 à 10",
+		'custom_index_inria:more' => 'En savoir plus ...',
+		'custom_index_inria:title' => 'Bienvenue sur DEVNET',
 		'custom_index_inria:groups:wall' => "Mur des groupes populaires",
 		'custom_index_inria:settings:filter' => "Vos filtres d'actualités",
 		'custom_index_inria:filter:label:new' => 'Nouveau filtre',
