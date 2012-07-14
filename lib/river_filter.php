@@ -150,7 +150,8 @@ function get_user_filters(ElggUser $user)
 function get_default_filters()
 {
 	global $CONFIG;
-	$sql = "SELECT DISTINCT e.* FROM {$CONFIG->dbprefix}entities e  WHERE  e.type = 'object' AND e.subtype = 43 AND e.owner_guid = 0 ORDER BY e.time_created desc LIMIT 0, 999";
+	$subtype_id = get_subtype_id('object','filter');
+	$sql = "SELECT DISTINCT e.* FROM {$CONFIG->dbprefix}entities e  WHERE  e.type = 'object' AND e.subtype = {$subtype_id} AND e.owner_guid = 0 ORDER BY e.time_created desc LIMIT 0, 999";
 	
 	$filters = get_data($sql, 'entity_row_to_elggstar');
 	if(is_array($filters))
